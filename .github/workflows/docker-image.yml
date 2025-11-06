@@ -1,4 +1,4 @@
-name: Docker Image Build
+name: Docker Image Build and Deploy
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Set up Node.js (optional but useful for build/test)
+      # 2. Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -50,27 +50,20 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/bank-app:${{ github.run_id }}
 
-        
   kuber-update:
+    name: Update Kubernetes Manifest
     runs-on: ubuntu-latest
-    needs: docker
+    needs: build-and-push  # depends on image being built first
 
     steps:
-          steps:
       # 1. Checkout repo
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 2. Update Kubernetes manifest with new image
+      # 2. Update Kubernetes manifest with new image tag
       - name: Update Kubernetes manifest with new image
         run: |
           sed -i "s|image: .*|image: ${{ secrets.DOCKERHUB_USERNAME }}/bank-app:${{ github.run_id }}|g" kubernetes/deployment.yaml
           cat kubernetes/deployment.yaml
-
-
-
-
-          
-
