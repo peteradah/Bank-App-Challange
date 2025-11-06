@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: bank-app
-          image: adah001/bank-app:latest   # or use a specific tag
+          image: adah001/bank-app:19151359445
           ports:
             - containerPort: 80
 
