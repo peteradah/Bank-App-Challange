@@ -65,5 +65,5 @@ jobs:
       # 2. Update Kubernetes manifest with new image tag
       - name: Update Kubernetes manifest with new image
         run: |
-          sed -i "s|image: .*|image: ${{ secrets.DOCKERHUB_USERNAME }}/bank-app:'${{ github.run_id }}'/" kubernetes/deployment.yaml
+          sed -i "s|image: .*|image: ${{ secrets.DOCKERHUB_USERNAME }}/bank-app:${{ github.run_id }}|g" kubernetes/deployment.yaml
           cat kubernetes/deployment.yaml
