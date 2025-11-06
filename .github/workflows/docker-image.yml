@@ -53,7 +53,7 @@ jobs:
   kuber-update:
     name: Update Kubernetes Manifest
     runs-on: ubuntu-latest
-    needs: build-and-push  # depends on image being built first
+    needs: build-and-push  # wait until image is built and pushed
 
     steps:
       # 1. Checkout repo
@@ -62,8 +62,15 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 2. Update Kubernetes manifest with new image tag
-      - name: Update Kubernetes manifest with new image
+      # 2. Update manifest, commit, and push
+      - name: Update and Commit Kubernetes manifest
         run: |
           sed -i "s|image: .*|image: ${{ secrets.DOCKERHUB_USERNAME }}/bank-app:${{ github.run_id }}|g" kubernetes/deployment.yaml
           cat kubernetes/deployment.yaml
+
+          git config user.name "peter"
+          git config user.email "adahpeter001@gmail.com"
+
+          git add kubernetes/deployment.yaml
+          git commit -m "Update Kubernetes manifest with image tag ${{ github.run_id }}"
+          git push origin Master
