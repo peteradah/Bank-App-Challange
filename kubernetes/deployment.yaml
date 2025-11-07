@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: bank-app
-          image: adah001/bank-app:19151359445
+          image: adah001/bank-app:19162531464
           ports:
             - containerPort: 80
 
